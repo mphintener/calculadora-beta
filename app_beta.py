@@ -5,7 +5,7 @@ import pydeck as pdk
 
 st.set_page_config(page_title="LAB: Calculadora do Trecho", layout="centered")
 
-# CSS: ESTILO DE ALTO IMPACTO E SÍNTESE ENFÁTICA
+# CSS: ALTO IMPACTO E SÍNTESE ENFÁTICA
 st.markdown("""
     <style>
     [data-testid="stAppViewContainer"], .stApp { background-color: #000000 !important; }
@@ -21,8 +21,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# BASE DE DADOS GEO (DISTRITOS + RMSP COMPLETA)
-# Coordenadas aproximadas para todos para garantir o funcionamento do Mapa 3D
+# BASE DE DADOS GEO COMPLETA (DISTRITOS E RMSP)
 geo_db = {
     "São Paulo (Centro)": [-23.5505, -46.6333], "Água Rasa": [-23.55, -46.58], "Alto de Pinheiros": [-23.55, -46.70], "Anhanguera": [-23.43, -46.78], "Aricanduva": [-23.58, -46.51], "Artur Alvim": [-23.53, -46.48], "Barra Funda": [-23.52, -46.66], "Bela Vista": [-23.56, -46.64], "Belém": [-23.54, -46.59], "Bom Retiro": [-23.52, -46.63], "Brasilândia": [-23.46, -46.68], "Butantã": [-23.57, -46.70], "Cachoeirinha": [-23.47, -46.65], "Cambuci": [-23.56, -46.62], "Campo Belo": [-23.62, -46.66], "Campo Grande": [-23.67, -46.68], "Campo Limpo": [-23.64, -46.75], "Cangaíba": [-23.50, -46.52], "Capão Redondo": [-23.66, -46.76], "Carrão": [-23.55, -46.54], "Casa Verde": [-23.50, -46.65], "Cidade Ademar": [-23.67, -46.65], "Cidade Dutra": [-23.70, -46.69], "Cidade Líder": [-23.56, -46.49], "Cidade Tiradentes": [-23.59, -46.40], "Consolação": [-23.55, -46.65], "Ermelino Matarazzo": [-23.49, -46.48], "Freguesia do Ó": [-23.50, -46.69], "Grajaú": [-23.77, -46.69], "Guaianases": [-23.54, -46.42], "Ipiranga": [-23.59, -46.60], "Itaim Bibi": [-23.58, -46.67], "Itaim Paulista": [-23.49, -46.39], "Itaquera": [-23.53, -46.45], "Jabaquara": [-23.64, -46.64], "Jaçanã": [-23.46, -46.59], "Jaguara": [-23.50, -46.75], "Jaguaré": [-23.54, -46.74], "Jaraguá": [-23.44, -46.74], "Jardim Ângela": [-23.71, -46.77], "Jardim Helena": [-23.48, -46.41], "Jardim Paulista": [-23.57, -46.66], "Lapa": [-23.52, -46.70], "Liberdade": [-23.56, -46.63], "Limão": [-23.51, -46.67], "Mandaqui": [-23.47, -46.63], "Marsilac": [-23.89, -46.67], "Moema": [-23.59, -46.66], "Mooca": [-23.55, -46.60], "Morumbi": [-23.59, -46.72], "Parelheiros": [-23.83, -46.71], "Pari": [-23.53, -46.61], "Parque do Carmo": [-23.57, -46.47], "Pedreira": [-23.69, -46.63], "Penha": [-23.52, -46.54], "Perdizes": [-23.53, -46.67], "Perus": [-23.40, -46.75], "Pinheiros": [-23.56, -46.70], "Pirituba": [-23.48, -46.72], "Ponte Rasa": [-23.51, -46.50], "Raposo Tavares": [-23.58, -46.78], "República": [-23.54, -46.64], "Rio Pequeno": [-23.57, -46.75], "Sacomã": [-23.61, -46.59], "Santa Cecília": [-23.53, -46.64], "Santana": [-23.50, -46.62], "Santo Amaro": [-23.64, -46.70], "São Domingos": [-23.49, -46.74], "São Lucas": [-23.58, -46.55], "São Mateus": [-23.60, -46.47], "São Miguel": [-23.49, -46.44], "São Rafael": [-23.61, -46.45], "Sapopemba": [-23.60, -46.51], "Saúde": [-23.61, -46.64], "Sé": [-23.54, -46.63], "Socorro": [-23.69, -46.70], "Tatuapé": [-23.54, -46.57], "Tremembé": [-23.45, -46.61], "Tucuruvi": [-23.48, -46.60], "Vila Andrade": [-23.63, -46.72], "Vila Curuçá": [-23.49, -46.41], "Vila Formosa": [-23.57, -46.55], "Vila Guilherme": [-23.51, -46.59], "Vila Jacuí": [-23.49, -46.46], "Vila Leopoldina": [-23.52, -46.73], "Vila Maria": [-23.51, -46.57], "Vila Mariana": [-23.58, -46.63], "Vila Matilde": [-23.54, -46.52], "Vila Medeiros": [-23.49, -46.58], "Vila Prudente": [-23.58, -46.58], "Vila Sônia": [-23.59, -46.73],
     "Arujá": [-23.39, -46.32], "Barueri": [-23.51, -46.87], "Biritiba-Mirim": [-23.57, -45.88], "Caieiras": [-23.36, -46.74], "Cajamar": [-23.35, -46.87], "Carapicuíba": [-23.52, -46.83], "Cotia": [-23.60, -46.91], "Diadema": [-23.68, -46.62], "Embu das Artes": [-23.64, -46.85], "Embu-Guaçu": [-23.83, -46.81], "Ferraz de Vasconcelos": [-23.54, -46.36], "Francisco Morato": [-23.28, -46.74], "Franco da Rocha": [-23.32, -46.72], "Guararema": [-23.41, -46.03], "Guarulhos": [-23.45, -46.53], "Itapecerica da Serra": [-23.71, -46.84], "Itapevi": [-23.54, -46.93], "Itaquaquecetuba": [-23.48, -46.34], "Jandira": [-23.52, -46.90], "Juquitiba": [-23.93, -47.07], "Mairiporã": [-23.31, -46.58], "Mauá": [-23.66, -46.46], "Mogi das Cruzes": [-23.52, -46.18], "Osasco": [-23.53, -46.79], "Pirapora do Bom Jesus": [-23.39, -46.99], "Poá": [-23.53, -46.34], "Ribeirão Pires": [-23.71, -46.41], "Rio Grande da Serra": [-23.74, -46.40], "Salesópolis": [-23.53, -45.84], "Santa Isabel": [-23.31, -46.22], "Santana de Parnaíba": [-23.44, -46.91], "Santo André": [-23.66, -46.53], "São Bernardo do Campo": [-23.69, -46.56], "São Caetano do Sul": [-23.62, -46.57], "São Lourenço da Serra": [-23.85, -46.94], "Suzano": [-23.53, -46.31], "Taboão da Serra": [-23.62, -46.75], "Vargem Grande Paulista": [-23.60, -47.02]
@@ -74,33 +73,35 @@ if btn and sal > 0:
         "end_lat": geo_db[trabalho][0], "end_lon": geo_db[trabalho][1]
     }])
 
+    # Ajuste: se a origem e destino forem iguais, usamos um ponto, senão o arco
+    view_lat = (geo_db[moradia][0] + geo_db[trabalho][0]) / 2
+    view_lon = (geo_db[moradia][1] + geo_db[trabalho][1]) / 2
+
     st.pydeck_chart(pdk.Deck(
-        map_style='mapbox://styles/mapbox/dark-v9',
         initial_view_state=pdk.ViewState(
-            latitude=(geo_db[moradia][0] + geo_db[trabalho][0]) / 2,
-            longitude=(geo_db[moradia][1] + geo_db[trabalho][1]) / 2,
+            latitude=view_lat, longitude=view_lon,
             zoom=10, pitch=50,
         ),
         layers=[
             pdk.Layer(
                 "ArcLayer", data=arc_data, get_source_position=["start_lon", "start_lat"],
                 get_target_position=["end_lon", "end_lat"],
-                get_source_color=[255, 204, 0], get_target_color=[230, 57, 70],
-                get_width=6,
+                get_source_color=[255, 204, 0, 160], get_target_color=[230, 57, 70, 160],
+                get_width=8,
             ),
         ],
     ))
-    
+
     
 
-    # SÍNTESE COM ÊNFASE TOTAL
+    # SÍNTESE DE ALTO IMPACTO
     local_txt = f"por dentro de <b>{moradia}</b>" if moradia == trabalho else f"entre <b>{moradia}</b> e <b>{trabalho}</b>"
     sintese_v = f"<br><br><b>RENDIMENTO RESIDUAL:</b> Após o custo de vida (R$ {vida:,.2f}), restam apenas <span style='color:#FFCC00'>R$ {max(0, sobra_final):.2f}</span> mensais." if vida > 0 else ""
 
     st.markdown(f"""
         <div class="sintese-box">
             🚨 SÍNTESE DA EXPROPRIAÇÃO ({dias_presenca} DIAS):<br><br>
-            Ao se deslocar {local_txt}, você dedica <span style="color:#FFCC00">{h_total_exprop:.0f} horas</span> mensais não remuneradas ao sistema de mobilidade.<br><br>
+            Ao se deslocar {local_txt}, você dedica <span style="color:#FFCC00">{h_total_exprop:.0f} horas</span> mensais não remuneradas ao sistema.<br><br>
             O seu <b>VALOR REAL PELA HORA DE TRABALHO PAGA</b> cai para <b>R$ {max(0, v_hora_real):.2f}</b>.{sintese_v}
         </div>
     """, unsafe_allow_html=True)
