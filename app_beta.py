@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 
 st.set_page_config(page_title="LAB: Calculadora do Trecho", layout="centered")
 
-# Mantendo a Identidade Visual de Alto Contraste
+# CSS MANTENDO A IDENTIDADE VISUAL
 st.markdown("""
     <style>
     [data-testid="stAppViewContainer"], .stApp { background-color: #000000 !important; }
@@ -45,8 +45,7 @@ with st.form("beta_calc"):
     with col2:
         vida = st.number_input("🏠 CUSTO VIDA:", min_value=0.0)
     with col3:
-        # ATENDENDO À SUGESTÃO: TRABALHO HÍBRIDO
-        dias_trecho = st.number_input("📅 DIAS NO TRECHO/MÊS:", min_value=1, max_value=31, value=22, help="Quantos dias por mês você efetivamente faz o trajeto?")
+        dias_trecho = st.number_input("📅 DIAS NO TRECHO/MÊS:", min_value=1, max_value=31, value=22)
     
     st.markdown('<div class="secao-titulo">🚌 GASTOS E TEMPO NO TRECHO</div>', unsafe_allow_html=True)
     gasto_dia = st.number_input("GASTO TOTAL DIÁRIO (IDA+VOLTA R$):", min_value=0.0)
@@ -63,13 +62,11 @@ if btn and sal > 0:
     perda = (1 - (v_hora_real / (sal/h_paga_mes))) * 100
     sobra_final = sal - custo_t_total - vida
 
-    # RESULTADOS EM CARDS
     r1, r2, r3 = st.columns(3)
     with r1: st.markdown(f'<div class="card-res"><div class="label-card">VALOR HORA REAL<br>(MODELO BETA)</div><div class="val-res">R$ {max(0, v_hora_real):.2f}</div></div>', unsafe_allow_html=True)
     with r2: st.markdown(f'<div class="card-res"><div class="label-card">CONFISCO<br>REAL</div><div class="val-res">{max(0, perda):.1f}%</div></div>', unsafe_allow_html=True)
     with r3: st.markdown(f'<div class="card-res"><div class="label-card">EXPROPRIAÇÃO<br>MENSAL</div><div class="val-res">{h_total_exprop:.0f}H</div></div>', unsafe_allow_html=True)
 
-    # MAPA COM PONTOS REAIS
     st.markdown('<div class="secao-titulo">🗺️ MAPEAMENTO DO DESLOCAMENTO</div>', unsafe_allow_html=True)
     df_map = pd.DataFrame({
         'lat': [coords[moradia][0], coords[trabalho][0]],
@@ -77,12 +74,10 @@ if btn and sal > 0:
     })
     st.map(df_map)
 
-    [Image of a geographical map of the Metropolitan Region of São Paulo showing commuting patterns between the periphery and the center]
-
     st.markdown(f"""
         <div class="sintese-box">
             <b>SÍNTESE DO EXPERIMENTO:</b><br>
             Considerando <b>{dias_trecho} dias</b> presenciais, sua expropriação temporal é de <b>{h_total_exprop:.0f} horas</b>. 
-            O mapa acima ilustra a distância que separa sua residência da fonte de renda, um espaço geográfico onde ocorre o <b>confisco silencioso</b> do seu rendimento.
+            O mapa acima ilustra a distância física que sustenta a <b>expropriação do tempo</b> entre periferia e centro.
         </div>
     """, unsafe_allow_html=True)
